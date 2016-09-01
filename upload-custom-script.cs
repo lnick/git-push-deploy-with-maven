@@ -14,11 +14,11 @@ scriptBody = scriptBody.replace("${TOKEN}", token);
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(scriptName);
 
-//creating a new script 
+//create a new script 
 var resp = hivext.dev.scripting.CreateScript(scriptName, scriptType, scriptBody);
 if (resp.result != 0) return resp;
 
-//get scripting domain
+//get app domain
 var domain = jelastic.dev.apps.GetApp(appid).hosting.domain;
 
 return {
