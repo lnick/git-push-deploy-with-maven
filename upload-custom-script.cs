@@ -15,7 +15,7 @@ scriptBody = scriptBody.replace("${TOKEN}", token);
 jelastic.dev.scripting.DeleteScript(scriptName);
 
 //create a new script 
-var resp = hivext.dev.scripting.CreateScript(scriptName, scriptType, scriptBody);
+var resp = jelastic.dev.scripting.CreateScript(scriptName, scriptType, scriptBody);
 if (resp.result != 0) return resp;
 
 //get app domain
