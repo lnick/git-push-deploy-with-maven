@@ -1,5 +1,5 @@
 //@auth
-//@required('url', 'scriptName', 'scriptType', 'next')
+//@required('url', 'next')
 
 import com.hivext.api.core.utils.Transport;
 import com.hivext.api.utils.Random;
@@ -15,7 +15,10 @@ scriptBody = scriptBody.replace("${TOKEN}", token);
 jelastic.dev.scripting.DeleteScript(scriptName);
 
 //create a new script 
-var resp = jelastic.dev.scripting.CreateScript(scriptName, scriptType, scriptBody);
+var envName = "${env.envName}",
+    scriptName = envName + "-git-push-redeploy"; 
+  
+var resp = jelastic.dev.scripting.CreateScript(scriptName, 'js', scriptBody);
 if (resp.result != 0) return resp;
 
 //get app domain
