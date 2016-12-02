@@ -29,9 +29,9 @@
         "onCall": {
           "execScript": {
             "type": "js",
-            "script": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/upload-custom-script.cs",
+            "script": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/scripts/upload-custom-script.cs",
             "params": {
-              "url": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/redeploy.cs",
+              "url": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/scripts/redeploy.cs",
               "next": "set-redeploy-call"
             }
           }
@@ -54,7 +54,7 @@
         "onCall": {
           "execScript": {
             "type": "js",
-            "script": "https://raw.githubusercontent.com/jelastic-jps/git-push-deploy-with-maven/master/add-git-project-wo-auth.cs?2",
+            "script": "https://raw.githubusercontent.com/jelastic-jps/git-push-deploy-with-maven/master/scripts/add-git-project-wo-auth.cs",
             "params": {
               "name": "myapp",
               "url": "https://github.com/jelastic/HelloWorld.git",
