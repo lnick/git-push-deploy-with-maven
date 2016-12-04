@@ -14,11 +14,13 @@ scriptBody = scriptBody.replace("${TOKEN}", token);
 targetEnv = targetEnv.toString().split(".")[0];
 scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv);
 scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
+var buildEnv = "${env.envName}";
+scriptBody = scriptBody.replace("${BUILD_ENV}", buildEnv);
 scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
 
 var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
 if (isNaN(projectId)) {
-   projectId = jelastic.env.control.GetEnvInfo('${env.envName}', session).nodes[0].customitem.projects[0].id;
+   projectId = jelastic.env.control.GetEnvInfo(buildEnv, session).nodes[0].customitem.projects[0].id;
 }
 scriptBody = scriptBody.replace("${PROJECT_ID}", projectId.toString());
 
