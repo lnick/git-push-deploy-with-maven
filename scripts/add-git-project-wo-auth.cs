@@ -20,7 +20,7 @@ var params = {
 }
 
 //remove the old project
-var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 2);
+var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
 if (!isNaN(projectId)) {
    var resp = jelastic.env.build.RemoveProject(params.envName, params.session, params.nodeId, projectId);
    if (resp.result != 0) return resp;
