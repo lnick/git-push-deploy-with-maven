@@ -50,11 +50,6 @@ var params = {
     }
 };
 
-return {
-    result: 0,
-    response: eval("(" + call(post, params) + ")")
-}
-
 function call(method, params) {
 
     if (params) {
@@ -65,7 +60,6 @@ function call(method, params) {
         response = "";
     if (status == 200) {
         var br = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream())),
-
             line;
         while ((line = br.readLine()) != null) {
             response = response + line;
@@ -74,4 +68,10 @@ function call(method, params) {
     method.releaseConnection();
     return response;
 }
+
+return {
+    result: 0,
+    response: eval("(" + call(post, params) + ")")
+}
+
 
