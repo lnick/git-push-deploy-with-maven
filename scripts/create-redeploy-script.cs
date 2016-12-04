@@ -12,7 +12,7 @@ var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
 
 //create a new script 
-var scriptName = "${globals.scriptName}"; 
+var scriptName = "${env.envName}-${globals.scriptName}"; 
 
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(scriptName);
