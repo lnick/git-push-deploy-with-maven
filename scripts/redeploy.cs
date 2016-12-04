@@ -1,4 +1,3 @@
-//@url('/redeploy') 
 //@required('token', 'targetAppid', 'nodeGroup')
 
 if (token == "${TOKEN}") {
