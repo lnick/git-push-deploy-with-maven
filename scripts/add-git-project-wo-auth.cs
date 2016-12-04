@@ -20,11 +20,14 @@ var params = {
 }
 
 //remove the old project
-resp = jelastic.env.build.RemoveProject(params.envName, params.session, params.nodeId, "${nodes.build.first.customitem.projects[0].id}");
-if (resp.result != 0) return resp;
+var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 2);
+if (!isNaN(projectId)) {
+   var resp = jelastic.env.build.RemoveProject(params.envName, params.session, params.nodeId, projectId);
+   if (resp.result != 0) return resp;
+}
 
 //add and build new project 
-resp = jelastic.env.build.AddProject(params.envName, params.session, params.nodeId, params.name, params.type, params.url, params.keyId, params.login, params.password, params.env, params.context, params.branch, params.autoupdate, params.interval, params.autoResolveConflict);
+var resp = jelastic.env.build.AddProject(params.envName, params.session, params.nodeId, params.name, params.type, params.url, params.keyId, params.login, params.password, params.env, params.context, params.branch, params.autoupdate, params.interval, params.autoResolveConflict);
 if (resp.result != 0) return resp;
 
 resp = jelastic.env.build.BuildProject(params.envName, params.session, params.nodeId, resp.id);
