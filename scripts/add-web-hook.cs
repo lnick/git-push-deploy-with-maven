@@ -52,7 +52,7 @@ var params = {
 
 return {
     result: 0, 
-    response: eval("(" + exec(post, params) + ")")
+    hook: eval("(" + exec(post, params) + ")")
 };
 
 function exec(method, params) {
