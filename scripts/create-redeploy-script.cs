@@ -11,13 +11,12 @@ var scriptBody = new Transport().get(url)
 var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
 
+//create a new script 
+var scriptName = "${globals.scriptName}"; 
+
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(scriptName);
 
-//create a new script 
-var envName = "${env.envName}",
-    scriptName = envName + "-git-push-redeploy"; 
-  
 var resp = jelastic.dev.scripting.CreateScript(scriptName, 'js', scriptBody);
 if (resp.result != 0) return resp;
 
