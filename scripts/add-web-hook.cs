@@ -47,5 +47,5 @@ post.releaseConnection();
 
 return {
     result: 0, 
-    response: JSONUtils.toJSON(response)
+    response: eval("(" + response + ")")
 };
