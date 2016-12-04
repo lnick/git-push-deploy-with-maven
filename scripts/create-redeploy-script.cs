@@ -1,5 +1,5 @@
 //@auth
-//@req(url, next, targetEnv)
+//@req(url, next, targetEnv, nodeGroup)
 
 import com.hivext.api.core.utils.Transport;
 import com.hivext.api.utils.Random;
@@ -10,7 +10,10 @@ var scriptBody = new Transport().get(url)
 //inject token
 var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
-scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv);
+scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv.toString());
+scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
+scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
+scriptBody = scriptBody.replace("${PROJECT_ID}", "${nodes.build.first.customitem.projects[0].id}");
 
 //create a new script 
 var scriptName = "${env.envName}-${globals.scriptName}"; 
