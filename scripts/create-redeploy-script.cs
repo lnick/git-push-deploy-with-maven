@@ -1,5 +1,5 @@
 //@auth
-//@required('url', 'next')
+//@req(url, next, targetEnv)
 
 import com.hivext.api.core.utils.Transport;
 import com.hivext.api.utils.Random;
@@ -10,6 +10,7 @@ var scriptBody = new Transport().get(url)
 //inject token
 var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
+scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv);
 
 //create a new script 
 var scriptName = "${env.envName}-${globals.scriptName}"; 
