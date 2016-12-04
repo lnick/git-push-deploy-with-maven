@@ -3,14 +3,14 @@
 
 var mountFrom = "${nodes.build.first.id}";
 var envName = "${settings.targetEnv}".split(".")[0];
-var groups = jelastic.env.control.GetEnvInfo(envName, session).nodeGroups; 
 var mountTo = "cp";
-for (var i = 0; i < groups.length; i++){
+//var groups = jelastic.env.control.GetEnvInfo(envName, session).nodeGroups; 
+/*for (var i = 0; i < groups.length; i++){
   if (groups[i].name == "storage") {
     mountTo = "storage";
     break;
   }
-}
+}*/
 
 var resp = jelastic.env.file.RemoveMountPointByGroup(envName, session, mountTo, pathTo);
 if (resp.result != 0) return resp;
