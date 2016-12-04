@@ -20,7 +20,7 @@ var params = {
 }
 
 //remove the old project
-resp = jelastic.env.build.RemoveProject(params.envName, params.session, params.nodeid, "${nodes.build.first.customitem.projects[0].id}");
+resp = jelastic.env.build.RemoveProject(params.envName, params.session, params.nodeId, "${nodes.build.first.customitem.projects[0].id}");
 if (resp.result != 0) return resp;
 
 //add and build new project 
