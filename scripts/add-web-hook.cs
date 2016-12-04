@@ -1,6 +1,8 @@
-//@req(user, repo, token, url)
+//@req(domain, user, repo, token, callback, scriptName, action)
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
@@ -17,7 +19,23 @@ client.getParams().setAuthenticationPreemptive(true);
 client.getState().setCredentials(AuthScope.ANY, creds);
 
 
-var post = new PostMethod("https://api.github.com/repos/"+user+"/"+repo+"/hooks");
+//Get list of hooks
+var get = new GetMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks");
+var hooks = eval("(" + call(get) + ")");
+
+//Clear previous hooks
+for (var i = 0; i < hooks.length; i++) {
+    if (hooks[i].config.url.indexOf(scriptName) != -1) {
+        var del = new DeleteMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks/" + hooks[i].id);
+        call(del);
+    }
+}
+
+if (action == 'delete' || action == 'clean'){
+    return {result:0};
+}
+    
+var post = new PostMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks");
 
 //Hook request params
 var params = {
@@ -25,27 +43,32 @@ var params = {
     "active": true,
     "events": ["push", "pull_request"],
     "config": {
-        "url": url,
+        "url": callback,
         "content_type": "json"
     }
 };
 
-var requestEntity = new StringRequestEntity(JSONUtils.jsonStringify(params), "application/json", "UTF-8");
+function call(method, params) {
 
+    if (params) {
+        var requestEntity = new StringRequestEntity(JSONUtils.jsonStringify(params), "application/json", "UTF-8");
+        method.setRequestEntity(requestEntity);
+    }
+    var status = client.executeMethod(method),
+        response = "";
+    if (status == 200) {
+        var br = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream())),
 
-post.setRequestEntity(requestEntity);
-var status = client.executeMethod(post), 
-    br = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream())),
-    response = "",
-    line;
-
-while ((line = br.readLine()) != null) {
-    response = response + line;
+            line;
+        while ((line = br.readLine()) != null) {
+            response = response + line;
+        }
+    }
+    method.releaseConnection();
+    return response;
 }
 
-post.releaseConnection();
-
 return {
-    result: 0, 
-    response: eval("(" + response + ")")
+    result: 0,
+    response: eval("(" + call(get) + ")")
 };
