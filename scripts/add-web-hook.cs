@@ -35,7 +35,8 @@ var action = getParam('action');
 if (action == 'delete' || action == 'clean'){
     return {result:0};
 }
-    
+
+//Create a new hook
 var post = new PostMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks");
 
 //Hook request params
@@ -48,6 +49,11 @@ var params = {
         "content_type": "json"
     }
 };
+
+return {
+    result: 0,
+    response: eval("(" + call(post, params) + ")")
+}
 
 function call(method, params) {
 
@@ -69,7 +75,3 @@ function call(method, params) {
     return response;
 }
 
-return {
-    result: 0,
-    response: eval("(" + call(get) + ")")
-};
