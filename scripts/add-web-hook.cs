@@ -50,12 +50,8 @@ var params = {
     }
 };
 
-var resp = {
-    result: 0,
-    response: eval("(" + exec(post, params) + ")")
-}
-
-return resp; 
+var newHook = eval("(" + exec(post, params) + ")");
+return {result: 0, response: newHook};
 
 function exec(method, params) {
     if (params) {
