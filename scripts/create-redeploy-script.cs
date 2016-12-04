@@ -10,7 +10,7 @@ var scriptBody = new Transport().get(url)
 //inject token
 var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
-scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv.toString());
+scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv.toString().split(".")[0]);
 scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
 scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
 scriptBody = scriptBody.replace("${PROJECT_ID}", "${nodes.build.first.customitem.projects[0].id}");
