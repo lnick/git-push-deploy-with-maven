@@ -1,4 +1,4 @@
-//@req(domain, user, repo, token, callback, scriptName, action)
+//@req(domain, user, repo, token, callback, scriptName)
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -31,6 +31,7 @@ for (var i = 0; i < hooks.length; i++) {
     }
 }
 
+var action = getParam('action');
 if (action == 'delete' || action == 'clean'){
     return {result:0};
 }
