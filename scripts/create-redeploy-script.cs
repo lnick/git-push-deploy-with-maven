@@ -10,10 +10,17 @@ var scriptBody = new Transport().get(url)
 //inject token
 var token = Random.getPswd(64);
 scriptBody = scriptBody.replace("${TOKEN}", token);
-scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv.toString().split(".")[0]);
+
+targetEnv = targetEnv.toString().split(".")[0];
+scriptBody = scriptBody.replace("${TARGET_ENV}", targetEnv);
 scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
 scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
-scriptBody = scriptBody.replace("${PROJECT_ID}", "${nodes.build.first.customitem.projects[0].id}");
+
+var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
+if (isNaN(projectId)) {
+   projectId = jelastic.env.control.GetEnvInfo('${env.envName}', session).nodes[0].customitem.projects[0].id;
+}
+scriptBody = scriptBody.replace("${PROJECT_ID}", projectId.toString());
 
 //create a new script 
 var scriptName = "${env.envName}-${globals.scriptName}"; 
