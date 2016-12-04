@@ -1,5 +1,5 @@
 //@auth 
-//@req(deployPath, mountTo)
+//@req(deployPath)
 var mountFrom = "${nodes.build.first.id}";
 var envName = "${settings.targetEnv}".split(".")[0];
 var groups = jelastic.env.control.GetEnvInfo(envName, session).nodeGroups; 
