@@ -5,8 +5,8 @@ if (token == "${TOKEN}") {
   if (action == 'redeploy'){
     return jelastic.env.control.RestartContainersByGroup(targetEnv, signature, nodeGroup); 
   } else if (action == 'rebuild'){
-    var nodeId = "${BUILD_NODE_ID}", projectId = "${PROJECT_ID}"; 
-    return jelastic.env.build.BuildProject(targetEnv, signature, nodeId, projectId);
+    var buildEnv = "${BUILD_ENV}", nodeId = "${BUILD_NODE_ID}", projectId = "${PROJECT_ID}"; 
+    return jelastic.env.build.BuildProject(buildEnv, signature, nodeId, projectId);
   } else {
     return {"result": 3, "error": "unknown action [" + action + "]"}
   }
