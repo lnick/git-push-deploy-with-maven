@@ -45,4 +45,7 @@ while ((line = br.readLine()) != null) {
 
 post.releaseConnection();
 
-return JSONUtils.toJSON(response);
+return {
+    result: 0, 
+    response: JSONUtils.toJSON(response)
+};
