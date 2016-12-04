@@ -21,13 +21,13 @@ client.getState().setCredentials(AuthScope.ANY, creds);
 
 //Get list of hooks
 var get = new GetMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks");
-var hooks = eval("(" + call(get) + ")");
+var hooks = eval("(" + exec(get) + ")");
 
 //Clear previous hooks
 for (var i = 0; i < hooks.length; i++) {
     if (hooks[i].config.url.indexOf(scriptName) != -1) {
         var del = new DeleteMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks/" + hooks[i].id);
-        call(del);
+        exec(del);
     }
 }
 
@@ -50,8 +50,14 @@ var params = {
     }
 };
 
-function call(method, params) {
+var resp = {
+    result: 0,
+    response: eval("(" + exec(post, params) + ")")
+}
 
+return resp; 
+
+function exec(method, params) {
     if (params) {
         var requestEntity = new StringRequestEntity(JSONUtils.jsonStringify(params), "application/json", "UTF-8");
         method.setRequestEntity(requestEntity);
@@ -69,9 +75,5 @@ function call(method, params) {
     return response;
 }
 
-return {
-    result: 0,
-    response: eval("(" + call(post, params) + ")")
-}
 
 
