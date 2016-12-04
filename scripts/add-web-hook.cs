@@ -1,4 +1,4 @@
-//@req(domain, user, repo, token, callback, scriptName)
+//@req(domain, user, repo, token, callbackUrl, scriptName)
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -45,13 +45,15 @@ var params = {
     "active": true,
     "events": ["push", "pull_request"],
     "config": {
-        "url": callback,
+        "url": callbackUrl,
         "content_type": "json"
     }
 };
 
-var newHook = eval("(" + exec(post, params) + ")");
-return {result: 0, response: newHook};
+return {
+    result: 0, 
+    response: eval("(" + exec(post, params) + ")")
+};
 
 function exec(method, params) {
     if (params) {
@@ -60,7 +62,7 @@ function exec(method, params) {
     }
     var status = client.executeMethod(method),
         response = "";
-    if (status == 200) {
+    if (status == 200 || status == 201) {
         var br = new BufferedReader(new InputStreamReader(method.getResponseBodyAsStream())),
             line;
         while ((line = br.readLine()) != null) {
@@ -70,6 +72,4 @@ function exec(method, params) {
     method.releaseConnection();
     return response;
 }
-
-
 
