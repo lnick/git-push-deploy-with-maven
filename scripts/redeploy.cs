@@ -3,7 +3,8 @@
 if (token == "${TOKEN}") {
   var targetEnv = "${TARGET_ENV}", nodeGroup = "${NODE_GROUP}";
   if (action == 'redeploy'){
-    return jelastic.env.control.RestartContainersByGroup(targetEnv, signature, nodeGroup); 
+    var delay = getParam("delay") || 30;
+    return jelastic.env.control.RestartContainersByGroup(targetEnv, signature, nodeGroup, delay); 
   } else if (action == 'rebuild'){
     var buildEnv = "${BUILD_ENV}", nodeId = "${BUILD_NODE_ID}", projectId = "${PROJECT_ID}"; 
     return jelastic.env.build.BuildProject(buildEnv, signature, nodeId, projectId);
