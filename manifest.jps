@@ -1,6 +1,6 @@
 {
 	"jpsType": "install",
-	"jpsVersion": "0.6",
+	"jpsVersion": "0.9",
 	"application": {
 		"id": "git-push-deploy-with-maven",
 		"name": "Git-Push-Deploy with Maven Build Node",
