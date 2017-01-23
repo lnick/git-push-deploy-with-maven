@@ -1,4 +1,4 @@
-//@req(domain, user, repo, token, callbackUrl, scriptName)
+//@req(user, repo, token, callbackUrl, scriptName)
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -19,11 +19,13 @@ client.getParams().setAuthenticationPreemptive(true);
 client.getState().setCredentials(AuthScope.ANY, creds);
 
 //Parsing repo url
+var domain = "github.com";
 if (repo.indexOf(".git") > -1) repo = repo.split(".git")[0];
 if (repo.indexOf("/") > -1) {
     var arr = repo.split("/");
     repo = arr.pop();
     user = arr.pop();
+    domain = arr.pop() || domain;
 }
 
 //Get list of hooks
