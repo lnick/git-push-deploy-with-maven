@@ -1,171 +1,119 @@
 {
 	"jpsType": "install",
-	"jpsVersion": "0.9",
-	"application": {
-		"id": "git-push-deploy-with-maven",
-		"name": "Git-Push-Deploy with Maven Build Node",
-		"homepage": "https://github.com/jelastic-jps/git-push-deploy-with-maven",
-		"description": "Example of Continuous Integration (CI) Pipeline with Maven",
-		"settings": {
-			"fields": [{
-				"name": "gitDomain",
-				"caption": "Git Domain",
-				"type": "string",
-				"default": "github.com",
-				"required": "true"
-			}, {
-				"name": "gitUser",
-				"caption": "Git User",
-				"type": "string",
-				"default": "",
-				"required": "true"
-			}, {
-				"name": "gitRepo",
-				"caption": "Git Repo Name",
-				"type": "string",
-				"default": "",
-				"required": "true"
-			}, {
-				"name": "gitToken",
-				"caption": "Git Token",
-				"type": "string",
-				"default": "",
-				"required": "true"
-			}, {
-				"name": "targetEnv",
-				"caption": "Target Env",
-				"editable": false,
-				"type": "envlist",
-				"required": true
-			}, {
-				"name": "deployPath",
-				"caption": "Deploy Path",
-				"type": "string",
-				"default": "/opt/payara/deployments",
-				"required": "true"
-			}]
-		},
-		"env": {
-			"topology": {
-				"nodes": [{
-					"count": 1,
-					"cloudlets": 16,
-					"nodeGroup": "build",
-					"nodeType": "maven3"
-				}],
-				"engine": "java7"
-			},
-			"onAfterDelete": {
-				"call": "delete-redeploy-script"
-			}
-		},
-		"globals": {
-			"scriptName": "git-push-redeploy",
-			"basePath": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/scripts"
-		},
-		"onInstall": {
-			"call": [
-				"add-git-project",
-				"create-redeploy-script",
-				"mount-deploy-volume"
-			]
-		},
-		"procedures": [{
-			"id": "create-redeploy-script",
-			"onCall": {
-				"execScript": {
-					"type": "js",
-					"script": "${globals.basePath}/create-redeploy-script.cs",
-					"params": {
-						"url": "${globals.basePath}/redeploy.cs",
-						"next": "setup-hooks",
-						"targetEnv": "${settings.targetEnv}",
-						"nodeGroup": "cp"
-					}
-				}
-			}
+	"jpsVersion": "0.99",
+	"id": "git-push-deploy-with-maven",
+	"name": "Git-Push-Deploy with Maven Build Node",
+	"homepage": "https://github.com/jelastic-jps/git-push-deploy-with-maven",
+	"description": "Example of Continuous Integration (CI) Pipeline with Maven",
+	"nodes": {
+		"count": 1,
+		"cloudlets": 16,
+		"nodeGroup": "build",
+		"nodeType": "maven3"
+	},
+	"engine": "java7",
+	"settings": {
+		"fields": [{
+			"name": "gitRepo",
+			"caption": "Git Repo Url",
+			"type": "string",
+			"default": "",
+			"required": "true"
 		}, {
-			"id": "setup-hooks",
-			"onCall": [{
-				"execCmd": {
-					"nodeType": "maven3",
-					"commands": [
-						"sed -i '/hook.log/d' /usr/lib/jelastic/modules/maven.module",
-						"sed -i '/:publish/i  echo -n \"$(date) -> \" >> /var/log/maven/hook.log && { wget -qO- \"http://${this.domain}/${env.envName}-${globals.scriptName}?token=${this.token}&action=redeploy\" >> /var/log/maven/hook.log; echo >> /var/log/maven/hook.log; } || ' /usr/lib/jelastic/modules/maven.module"
-					],
-					"user": "root"
-				}
-			}, {
-				"call": {
-					"procedure": "git-web-hook",
-					"params": {
-						"domain": "${this.domain}",
-						"token": "${this.token}"
-					}
-				}
-			}]
+			"name": "gitBranch",
+			"caption": "Branch",
+			"type": "string",
+			"default": "master",
+			"required": "true"
 		}, {
-			"id": "git-web-hook",
-			"onCall": [{
-				"execScript": {
-					"type": "js",
-					"script": "${globals.basePath}/add-web-hook.cs",
-					"params": {
-						"domain": "${settings.gitDomain}",
-						"user": "${settings.gitUser}",
-						"repo": "${settings.gitRepo}",
-						"token": "${settings.gitToken}",
-						"callbackUrl": "http://${this.domain}/${env.envName}-${globals.scriptName}?token=${this.token}&action=rebuild",
-						"scriptName": "${globals.scriptName}",
-						"action": "${this.action}"
-					}
-				}
-			}]
+			"name": "gitUser",
+			"caption": "User",
+			"type": "string",
+			"default": "",
+			"required": "true"
 		}, {
-			"id": "add-git-project",
-			"onCall": {
-				"execScript": {
-					"type": "js",
-					"script": "${globals.basePath}/add-git-project-wo-auth.cs",
-					"params": {
-						"name": "${globals.scriptName}",
-						"url": "https://github.com/sych74/HelloWorld.git",
-						"branch": "master"
-					}
-				}
-			}
+			"name": "gitToken",
+			"caption": "Token",
+			"type": "string",
+			"default": "",
+			"required": "true"
 		}, {
-			"id": "delete-redeploy-script",
-			"onCall": [{
-				"execScript": {
-					"type": "js",
-					"script": "return jelastic.dev.scripting.DeleteScript('${env.envName}-${globals.scriptName}')"
-				}
-			}, {
-				"call": {
-					"procedure": "git-web-hook",
-					"params": {
-						"action": "delete"
-					}
-				}
-			}]
+			"name": "targetEnv",
+			"caption": "Target Env",
+			"editable": false,
+			"type": "envlist",
+			"required": true
 		}, {
-			"id": "mount-deploy-volume",
-			"onCall": {
-				"execScript": {
-					"type": "js",
-					"script": "${globals.basePath}/add-deploy-mount.cs",
-					"params": {
-						"pathFrom": "/var/lib/jelastic/PROJECTS/${globals.scriptName}/target",
-						"pathTo": "${settings.deployPath}"
-					}
-				}
-			}
-		}, {
-			"id": "log",
-			"onCall": {
-				"log": "${this.message}"
-			}
+			"name": "deployPath",
+			"caption": "Deploy Path",
+			"type": "string",
+			"default": "/opt/payara/deployments",
+			"required": "true"
 		}]
+	},
+	"globals": {
+		"scriptName": "git-push-redeploy",
+		"basePath": "https://raw.githubusercontent.com/jelastic-jps/get-push-deploy-with-maven/master/scripts",
+		"hooksLog": "/var/log/maven/hooks.log"
+	},
+	"onInstall": [
+		"add-git-project",
+		"create-redeploy-script",
+		"mount-deploy-volume"
+	],
+	"onBeforeDelete": "delete-redeploy-script",
+	"actions": {
+		"create-redeploy-script": {
+			"script": "${globals.basePath}/create-redeploy-script.cs?07",
+			"url": "${globals.basePath}/redeploy.cs",
+			"next": "setup-hooks",
+			"targetEnv": "${settings.targetEnv}",
+			"nodeGroup": "cp"
+		},
+		"setup-hooks": [{
+			"cmd[maven3]": [
+				"sed -i '/hook.log/d' /usr/lib/jelastic/modules/maven.module",
+				"sed -i '/:publish/i  echo -n \"$(date) -> \" >> ${globals.hooksLog} && { wget -qO- \"http://${this.domain}/${env.envName}-${globals.scriptName}?token=${this.token}&action=redeploy\" >> ${globals.hooksLog}; echo >> ${globals.hooksLog}; } || ' /usr/lib/jelastic/modules/maven.module"
+			],
+			"user": "root"
+		}, {
+			"git-web-hook": {
+				"domain": "${this.domain}",
+				"token": "${this.token}"
+			}
+		}],
+		"git-web-hook": {
+			"script": "${globals.basePath}/add-web-hook.cs?07",
+			"domain": "${settings.gitDomain}",
+			"user": "${settings.gitUser}",
+			"repo": "${settings.gitRepo}",
+			"token": "${settings.gitToken}",
+			"callbackUrl": "http://${this.domain}/${env.envName}-${globals.scriptName}?token=${this.token}&action=rebuild",
+			"scriptName": "${globals.scriptName}",
+			"act": "${this.act}"
+		},
+		"add-git-project": {
+			"script": "${globals.basePath}/add-git-project.cs?07",
+			"name": "${globals.scriptName}",
+			"url": "${settings.gitRepo}",
+			"branch": "${settings.gitBranch}"
+		},
+		"delete-redeploy-script": [{
+			"jelastic.dev.scripting.DeleteScript": {
+				"name": "${env.envName}-${globals.scriptName}"
+			}
+		}, {
+			"git-web-hook": {
+				"act": "delete"
+			}
+		}],
+		"mount-deploy-volume": {
+			"script": "${globals.basePath}/add-deploy-mount.cs?07",
+			"pathFrom": "/var/lib/jelastic/PROJECTS/${globals.scriptName}/target",
+			"pathTo": "${settings.deployPath}"
+		}
+	},
+	"success": {
+		"text": "CI/CD pipeline has been successfully integrated!<br/>Open url of the target environment '${settings.targetEnv}' and go to the context defined in your pom.xml at <artifactId>.<br/>If someshing does not work check the logs, there are more details to analyze."
 	}
 }
