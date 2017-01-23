@@ -12,8 +12,8 @@ var params = {
    url: url,
    branch: branch,
    keyId: null,
-   login: null,
-   password: null,
+   login: "${settings.gitUser}",
+   password: "${settings.gitToken}",
    autoupdate: false,
    interval: 1,
    autoResolveConflict: true
