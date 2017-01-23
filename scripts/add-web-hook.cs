@@ -18,6 +18,13 @@ var creds = new UsernamePasswordCredentials(user, token);
 client.getParams().setAuthenticationPreemptive(true);
 client.getState().setCredentials(AuthScope.ANY, creds);
 
+//Parsing repo url
+if (repo.indexOf(".git") > -1) repo = repo.split(".git")[0];
+if (repo.indexOf("/") > -1) {
+    var arr = repo.split("/");
+    repo = arr.pop();
+    user = arr.pop();
+}
 
 //Get list of hooks
 var get = new GetMethod("https://api." + domain + "/repos/" + user + "/" + repo + "/hooks");
