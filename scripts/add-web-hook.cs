@@ -40,7 +40,8 @@ for (var i = 0; i < hooks.length; i++) {
     }
 }
 
-if (getParam('delete') || getParam('clean')){
+var action = getParam('act');
+if (action == 'delete' || action == 'clean'){
     return {result:0};
 }
 
