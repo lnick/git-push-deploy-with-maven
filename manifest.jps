@@ -114,6 +114,6 @@
 		}
 	},
 	"success": {
-		"text": "CI/CD pipeline has been successfully integrated!<br/>Open url of the target environment '${settings.targetEnv}' and go to the context defined in your pom.xml at <artifactId>.<br/>If someshing does not work check the logs, there are more details to analyze."
+		"text": "CI/CD pipeline has been successfully integrated!<br/>Open url of the target environment '${settings.targetEnv}' and go to the context defined in your pom.xml at &lt;artifactId&gt;.<br/><br/>If someshing does not work check the logs, there are more details to analyze."
 	}
 }
