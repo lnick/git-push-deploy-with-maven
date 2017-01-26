@@ -24,6 +24,7 @@ if (repo.indexOf(".git") > -1) repo = repo.split(".git")[0];
 if (repo.indexOf("/") > -1) {
     var arr = repo.split("/");
     repo = arr.pop();
+    if (repo == "") repo = arr.pop();
     user = arr.pop();
     domain = arr.pop() || domain;
 }
