@@ -10,22 +10,14 @@ if (token == "${TOKEN}") {
     if (action == 'redeploy') {
 
         //getting master node     
-        var nodeId = -1,
-            native = true;
+        var native = true;
         var resp = jelastic.env.control.GetEnvInfo(targetEnv, signature);
         if (resp.result != 0) return resp;
         var nodes = resp.nodes;
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].nodeGroup == nodeGroup && nodes[i].ismaster) {
-                nodeId = nodes[i].id;
                 if (nodes[i].type == 'docker') native = false;
                 break;
-            }
-        }
-        if (nodeId == -1) {
-            return {
-                result: 99,
-                error: "zero nodes in group [" + group + "]"
             }
         }
 
@@ -59,7 +51,6 @@ if (token == "${TOKEN}") {
         } else {
             return jelastic.env.control.RestartContainersByGroup(targetEnv, signature, nodeGroup, delay);
         }
-
     } else if (action == 'rebuild') {
         var buildEnv = "${BUILD_ENV}",
             nodeId = "${BUILD_NODE_ID}",
