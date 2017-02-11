@@ -39,7 +39,7 @@ if (isNaN(projectId)) {
    projectName = project.name;
 }
 
-scriptBody = scriptBody.replace("${PROJECT_NAME}", projectName);
+scriptBody = scriptBody.replace("${PROJECT_NAME}", projectName.toString());
 scriptBody = scriptBody.replace("${PROJECT_ID}", projectId.toString());
 
 var scriptName = "${env.envName}-${globals.scriptName}"; 
