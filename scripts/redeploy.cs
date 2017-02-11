@@ -4,28 +4,17 @@ if (token == "${TOKEN}") {
         nodeGroup = "${NODE_GROUP}", 
         buildNodeId = "${BUILD_NODE_ID}",
         envName = "${BUILD_ENV}",
-        scriptName = "${SCRIPT_NAME}",
-        delay = getParam("delay") || 30;
+        projectName = "${PROJECT_NAME}",
+        delay = getParam("delay") || 30,
+        certified = ${CERTIFIED};
 
     if (action == 'redeploy') {
 
-        //getting master node     
-        var certified = true;
-        var resp = jelastic.env.control.GetEnvInfo(targetEnv, signature);
-        if (resp.result != 0) return resp;
-        var nodes = resp.nodes;
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].nodeGroup == nodeGroup && nodes[i].ismaster) {
-                if (nodes[i].type == 'docker') certified = false;
-                break;
-            }
-        }
 
         if (certified) {
             var port = 8080;
-            var cmd = "cd " + dir + "; pkill -f SimpleHTTPServer; (python -m SimpleHTTPServer " + port + " &);";
-
-
+            var dir = "/var/lib/jelastic/PROJECTS/" + projectName + "/target"
+            var cmd = "cd " + dir + "; pkill -f SimpleHTTPServer; screen -md python -m SimpleHTTPServer " + port + ";";
             cmd += " ls -al " + dir + " | grep '^-' | head -n 1 | awk '{print $9}'";
 
             var resp = jelastic.env.control.ExecCmdById(envName, signature, "build", toJSON([{
