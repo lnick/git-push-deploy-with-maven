@@ -3,7 +3,7 @@ if (token == "${TOKEN}") {
     var targetEnv = "${TARGET_ENV}",
         nodeGroup = "${NODE_GROUP}", 
         buildNodeId = "${BUILD_NODE_ID}",
-        envName = "${ENV_NAME}",
+        envName = "${BUILD_ENV}",
         scriptName = "${SCRIPT_NAME}",
         delay = getParam("delay") || 30;
 
