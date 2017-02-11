@@ -17,15 +17,32 @@ scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
 var buildEnv = "${env.envName}";
 scriptBody = scriptBody.replace("${BUILD_ENV}", buildEnv);
 scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
-var scriptName = "${env.envName}-${globals.scriptName}"; 
-scriptBody = scriptBody.replace("${SCRIPT_NAME}", scriptName);
+
+//getting master node     
+var certified = true;
+var resp = jelastic.env.control.GetEnvInfo(targetEnv, session);
+if (resp.result != 0) return resp;
+var nodes = resp.nodes;
+for (var i = 0; i < nodes.length; i++) {
+   if (nodes[i].nodeGroup == nodeGroup && nodes[i].ismaster) {
+      if (nodes[i].type == 'docker') certified = false;
+         break;
+   }
+}
+scriptBody = scriptBody.replace("${CERTIFIED}", certified);
 
 var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
+var projectName = "${nodes.build.first.customitem.projects[0].name}";
 if (isNaN(projectId)) {
-   projectId = jelastic.env.control.GetEnvInfo(buildEnv, session).nodes[0].customitem.projects[0].id;
+   var project = jelastic.env.control.GetEnvInfo(buildEnv, session).nodes[0].customitem.projects[0];
+   projectId = project.id;
+   projectName = project.name;
 }
+
+scriptBody = scriptBody.replace("${PROJECT_NAME}", projectName);
 scriptBody = scriptBody.replace("${PROJECT_ID}", projectId.toString());
 
+var scriptName = "${env.envName}-${globals.scriptName}"; 
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(scriptName);
 
