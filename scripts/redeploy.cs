@@ -10,18 +10,18 @@ if (token == "${TOKEN}") {
     if (action == 'redeploy') {
 
         //getting master node     
-        var native = true;
+        var certified = true;
         var resp = jelastic.env.control.GetEnvInfo(targetEnv, signature);
         if (resp.result != 0) return resp;
         var nodes = resp.nodes;
         for (var i = 0; i < nodes.length; i++) {
             if (nodes[i].nodeGroup == nodeGroup && nodes[i].ismaster) {
-                if (nodes[i].type == 'docker') native = false;
+                if (nodes[i].type == 'docker') certified = false;
                 break;
             }
         }
 
-        if (native) {
+        if (certified) {
             var port = 8080;
             var cmd = "cd " + dir + "; pkill -f SimpleHTTPServer; (python -m SimpleHTTPServer " + port + " &);";
 
