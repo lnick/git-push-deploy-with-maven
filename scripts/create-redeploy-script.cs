@@ -29,7 +29,7 @@ for (var i = 0; i < nodes.length; i++) {
          break;
    }
 }
-scriptBody = scriptBody.replace("${CERTIFIED}", certified);
+scriptBody = scriptBody.replace("${CERTIFIED}", certified.toString());
 
 var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
 var projectName = "${nodes.build.first.customitem.projects[0].name}";
