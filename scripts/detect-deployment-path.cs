@@ -16,8 +16,9 @@ if ("${settings.deployPath}" == "auto") {
             result: 99,
             error: "Can't detect the deployment folder"
         }
-
 }
+
+
 return {
     result: 0,
     onAfterReturn: {
