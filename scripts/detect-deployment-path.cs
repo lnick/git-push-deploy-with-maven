@@ -1,5 +1,5 @@
-
-//detecting 
+//@req(mountAction)
+ 
 var pathTo = "${settings.deployPathCustom}";
 if ("${settings.deployPath}" == "auto") {
     
@@ -35,11 +35,6 @@ if ("${settings.deployPath}" == "auto") {
         }
 }
 
-return {
-    result: 0,
-    onAfterReturn: {
-        "mount-deploy-volume": {
-            pathTo: pathTo
-        }
-    }
-}
+resp.onAfterReturn = {};
+resp.onAfterReturn[mountAction] = {pathTo: pathTo};
+return resp;
