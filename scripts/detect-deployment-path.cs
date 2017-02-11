@@ -18,7 +18,6 @@ if ("${settings.deployPath}" == "auto") {
         }
 }
 
-
 return {
     result: 0,
     onAfterReturn: {
