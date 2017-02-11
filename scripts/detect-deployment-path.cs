@@ -1,13 +1,15 @@
 //@req(mountAction)
  
 var pathTo = "${settings.deployPathCustom}";
+var resp = {result:0};
 if ("${settings.deployPath}" == "auto") {
+    return resp;
     
     //looking for first node in cp layer 
     var group = "cp";
     var nodeId = -1; 
     var envName = "${settings.targetEnv}".split(".")[0];
-    var resp = jelastic.env.control.GetEnvInfo(envName, session);
+    resp = jelastic.env.control.GetEnvInfo(envName, session);
     if (resp.result != 0) return resp;
     var nodes = resp.nodes;
     for (var i = 0; i < nodes.length; i++){
@@ -22,7 +24,7 @@ if ("${settings.deployPath}" == "auto") {
 
     //getting WEBROOT as deployment path
     var cmd = "m=/etc/jelastic/metainf.conf; e=/etc/jelastic/environment; l=/var/lib/jelastic/libs/envinfo.lib; [ -f $m ] && { source $m; [ -f $e ] && source $e || source $l; }; echo ${WEBROOT:-$Webroot_Path}";
-    var resp = jelastic.env.control.ExecCmdById(envName, session, nodeId, toJSON([{
+    resp = jelastic.env.control.ExecCmdById(envName, session, nodeId, toJSON([{
         "command": cmd
     }]), true, "root");
     if (resp.result != 0) return resp;
@@ -33,8 +35,9 @@ if ("${settings.deployPath}" == "auto") {
             result: 99,
             error: "Can't detect the deployment folder"
         }
+} else {
+  resp.onAfterReturn = {};
+  resp.onAfterReturn[mountAction] = {pathTo: pathTo};
 }
 
-resp.onAfterReturn = {};
-resp.onAfterReturn[mountAction] = {pathTo: pathTo};
 return resp;
