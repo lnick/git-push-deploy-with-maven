@@ -17,6 +17,8 @@ scriptBody = scriptBody.replace("${NODE_GROUP}", nodeGroup.toString());
 var buildEnv = "${env.envName}";
 scriptBody = scriptBody.replace("${BUILD_ENV}", buildEnv);
 scriptBody = scriptBody.replace("${BUILD_NODE_ID}", "${nodes.build.first.id}");
+var scriptName = "${env.envName}-${globals.scriptName}"; 
+scriptBody = scriptBody.replace("${SCRIPT_NAME}", scriptName);
 
 var projectId = parseInt("${nodes.build.first.customitem.projects[0].id}", 10);
 if (isNaN(projectId)) {
@@ -24,12 +26,10 @@ if (isNaN(projectId)) {
 }
 scriptBody = scriptBody.replace("${PROJECT_ID}", projectId.toString());
 
-//create a new script 
-var scriptName = "${env.envName}-${globals.scriptName}"; 
-
 //delete the script if it exists already
 jelastic.dev.scripting.DeleteScript(scriptName);
 
+//create a new script 
 var resp = jelastic.dev.scripting.CreateScript(scriptName, 'js', scriptBody);
 if (resp.result != 0) return resp;
 
