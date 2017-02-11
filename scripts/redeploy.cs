@@ -24,7 +24,7 @@ if (token == "${TOKEN}") {
 
             var fileName = resp.responses[0].out;
             var arr = fileName.split(".");
-            arr = arr.pop();
+            arr.pop();
             var context = arr.join(".");
             var url = "http://node" + buildNodeId +"-" + envName + ":" + port + "/" + fileName;
             var respDeploy = jelastic.env.control.DeployApp(targetEnv, signature, url, fileName, context, false, delay);
