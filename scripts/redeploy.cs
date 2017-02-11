@@ -17,7 +17,7 @@ if (token == "${TOKEN}") {
             var cmd = "cd " + dir + "; pkill -f SimpleHTTPServer; screen -md python -m SimpleHTTPServer " + port + ";";
             cmd += " ls -al " + dir + " | grep '^-' | head -n 1 | awk '{print $9}'";
 
-            var resp = jelastic.env.control.ExecCmdById(envName, signature, "build", toJSON([{
+            var resp = jelastic.env.control.ExecCmdById(envName, signature, buildNodeId, toJSON([{
                 "command": cmd
             }]) + "", true, "root");
             if (resp.result != 0) return resp;
