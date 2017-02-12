@@ -47,7 +47,7 @@
 			"name": "deployType",
 			"type": "radio-fieldset",
 			"values": {
-				"native": "Native stacks - deployment via API",
+				"native": "Certified containers - deployment via API",
 				"custom": "Custom containers - deployment via volume mount + restart"
 			},
 			"showIf": {
