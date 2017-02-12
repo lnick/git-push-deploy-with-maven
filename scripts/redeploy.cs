@@ -9,8 +9,6 @@ if (token == "${TOKEN}") {
         certified = ${CERTIFIED};
 
     if (action == 'redeploy') {
-
-
         if (certified) {
             var port = 8080;
             var dir = "/var/lib/jelastic/PROJECTS/" + projectName + "/target"
