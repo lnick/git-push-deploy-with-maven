@@ -25,8 +25,10 @@ if (resp.result != 0) return resp;
 var nodes = resp.nodes;
 for (var i = 0; i < nodes.length; i++) {
    if (nodes[i].nodeGroup == nodeGroup && nodes[i].ismaster) {
-      if (nodes[i].type == 'docker') certified = false;
-         break;
+       if (nodes[i].nodeType == 'docker') {
+           certified = false;
+           break;
+       }
    }
 }
 scriptBody = scriptBody.replace("${CERTIFIED}", certified.toString());
