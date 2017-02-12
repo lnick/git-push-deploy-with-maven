@@ -44,10 +44,21 @@
 			"type": "envlist",
 			"required": true
 		}, {
-			"name": "deployPath",
-			"caption": "Deploy Path",
-			"type": "string",
-			"default": "/opt/payara/deployments",
+			"name": "deployType",
+			"type": "radio-fieldset",
+			"values": {
+				"native": "Native stacks - deployment via API",
+				"custom": "Custom containers - deployment via volume mount + restart"
+			},
+			"showIf": {
+				"custom": [{
+					"name": "deployPathCustom",
+					"caption": "Mount Path",
+					"type": "string",
+					"default": "/opt/payara/deployments"
+				}]
+			},
+			"default": "native",
 			"required": "true"
 		}]
 	},
@@ -58,17 +69,17 @@
 	},
 	"onInstall": [
 		"add-git-project",
-		"create-redeploy-script",
-		"mount-deploy-volume"
+		"mount-deploy-volume",
+		"create-redeploy-script"
 	],
 	"onBeforeDelete": "delete-redeploy-script",
 	"actions": {
 		"create-redeploy-script": {
-			"script": "${globals.basePath}/create-redeploy-script.cs?07",
+			"script": "${globals.basePath}/create-redeploy-script.cs?09",
 			"url": "${globals.basePath}/redeploy.cs",
-			"next": "setup-hooks",
 			"targetEnv": "${settings.targetEnv}",
-			"nodeGroup": "cp"
+			"nodeGroup": "cp",
+			"next": "setup-hooks"
 		},
 		"setup-hooks": [{
 			"cmd[maven3]": [
@@ -77,14 +88,13 @@
 			],
 			"user": "root"
 		}, {
-			"git-web-hook": {
+			"web-hook": {
 				"domain": "${this.domain}",
 				"token": "${this.token}"
 			}
 		}],
-		"git-web-hook": {
+		"web-hook": {
 			"script": "${globals.basePath}/add-web-hook.cs?07",
-			"domain": "${settings.gitDomain}",
 			"user": "${settings.gitUser}",
 			"repo": "${settings.gitRepo}",
 			"token": "${settings.gitToken}",
@@ -103,14 +113,16 @@
 				"name": "${env.envName}-${globals.scriptName}"
 			}
 		}, {
-			"git-web-hook": {
+			"web-hook": {
 				"act": "delete"
 			}
 		}],
 		"mount-deploy-volume": {
-			"script": "${globals.basePath}/add-deploy-mount.cs?07",
-			"pathFrom": "/var/lib/jelastic/PROJECTS/${globals.scriptName}/target",
-			"pathTo": "${settings.deployPath}"
+			"if ('${settings.deployType}' == 'custom')": {
+				"script": "${globals.basePath}/add-deploy-mount.cs?07",
+				"pathFrom": "/var/lib/jelastic/PROJECTS/${globals.scriptName}/target",
+				"pathTo": "${settings.deployPathCustom}"
+			}
 		}
 	},
 	"success": {
